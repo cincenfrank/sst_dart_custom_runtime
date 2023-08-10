@@ -52,6 +52,8 @@ zip -j lambda.zip bootstrap
 
 The resulting `lambda.zip` file can then be uploaded as a lambda function using the custom runtime.
 
+---
+
 ## HOW IT WORKS
 
 **IMPORTANT:** To use this approach, Docker must be installed and running.
@@ -183,9 +185,13 @@ export function API({ stack }: StackContext) {
 
 This approach enables the deployment of Dart code as an AWS Lambda Function using a Custom Runtime.
 
+---
+
 ## LIMITATIONS
 
 This experimental approach comes with some limitations. Notably, it is not integrated into the SST Framework. There are known limitations related to testing and debugging functions. When using the `sst dev` command, the `lambda.zip` file will be uploaded to AWS, making it currently possible to observe invocations or console logs only via the official AWS Console.
+
+---
 
 ## TROUBLESHOOTING
 
