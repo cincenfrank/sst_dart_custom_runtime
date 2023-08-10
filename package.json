@@ -1,0 +1,25 @@
+{
+  "name": "sst-dart-custom-runtime",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dartCompile && sst dev",
+    "build": "sst build",
+    "deploy": "sst deploy",
+    "remove": "sst remove",
+    "console": "sst console",
+    "typecheck": "tsc --noEmit",
+    "dartCompile": "cd packages/functions; rm dist/lambda.zip; docker run -v $PWD:/app -w /app -it --entrypoint ./build.sh dart; cd dist; zip -j lambda.zip bootstrap; cd .. ; rm dist/bootstrap;dart pub get; cd ..; cd .."
+  },
+  "devDependencies": {
+    "sst": "^2.23.14",
+    "aws-cdk-lib": "2.84.0",
+    "constructs": "10.1.156",
+    "typescript": "^5.1.6",
+    "@tsconfig/node16": "^16.1.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
