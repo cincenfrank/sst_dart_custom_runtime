@@ -227,8 +227,6 @@ const api = new Api(stack, "api", {
 
 This experimental approach comes with some limitations. Notably, it is not integrated into the SST Framework. There are known limitations related to testing and debugging functions. When using the `sst dev` command, the `lambda.zip` file will be uploaded to AWS, making it currently possible to observe invocations or console logs only via the official AWS Console.
 
-Using the SST support for Container Functions it will be possible to observe invocations also in the SST Console but it we will probably have worst performaces both for cold start and execution.
-
 ---
 
 ## TROUBLESHOOTING
