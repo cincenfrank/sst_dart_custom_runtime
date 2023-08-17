@@ -200,7 +200,7 @@ FROM public.ecr.aws/lambda/provided:al2
 COPY dist/bootstrap ${LAMBDA_RUNTIME_DIR}
 
 # OPTIONAL SPECIFY FUNCTION HANDLER (WE CAN SPECIFY IT LATER IN MYSTACK.TS)
-# CMD [ "hello.apigateway" ]
+# CMD [ "calculate" ]
 ```
 
 Lastly we can add to our `MyStack.ts` file the following construct:
