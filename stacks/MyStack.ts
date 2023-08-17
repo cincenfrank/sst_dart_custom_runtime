@@ -12,10 +12,19 @@ export function API({ stack }: StackContext) {
 
   const api = new Api(stack, "api", {
     routes: {
-      "GET /calculate": {
+      "GET /calculate/customRuntime": {
         type: "function",
         cdk: {
           function: calculateCdkFn,
+        },
+      },
+      "GET /calculate/containerRuntime": {
+        function: {
+          runtime: "container",
+          handler: "packages/functions",
+          container: {
+            cmd: ["calculate"],
+          },
         },
       },
     },

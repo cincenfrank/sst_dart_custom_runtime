@@ -147,7 +147,7 @@ The script section of the `package.json` file in the SST root folder was modifie
     "remove": "sst remove",
     "console": "sst console",
     "typecheck": "tsc --noEmit",
-    "dartCompile": "cd packages/functions; rm dist/lambda.zip; docker run -v $PWD:/app -w /app -it --entrypoint ./build.sh dart; cd dist; zip -j lambda.zip bootstrap; cd .. ; rm dist/bootstrap;dart pub get; cd ..; cd .."
+    "dartCompile": "cd packages/functions; rm dist/lambda.zip; rm dist/bootstrap; docker run -v $PWD:/app -w /app -it --entrypoint ./build.sh dart; cd dist; zip -j lambda.zip bootstrap; cd .. ; dart pub get; cd ..; cd .."
   },
 ```
 
@@ -168,7 +168,7 @@ export function API({ stack }: StackContext) {
 
   const api = new Api(stack, "api", {
     routes: {
-      "GET /calculate": {
+      "GET /calculate/customRuntime": {
         type: "function",
         cdk: {
           function: calculateCdkFn,
@@ -187,9 +187,47 @@ This approach enables the deployment of Dart code as an AWS Lambda Function usin
 
 ---
 
+## DEPLOY AS A CONTAINER FUNCTION
+
+It's also possible to use the SST Container Function support to deploy our function to AWS.
+In this case, the we have to create a `Dockerfile` inside the `packages/funtions` path with the following code:
+
+```bash
+# GET THE OFFICIAL LAMBDA CONTAINER FOR THE PROVIDED AL2 RUNTIME
+FROM public.ecr.aws/lambda/provided:al2
+
+# COPY BOOTSTRAP FILE
+COPY dist/bootstrap ${LAMBDA_RUNTIME_DIR}
+
+# OPTIONAL SPECIFY FUNCTION HANDLER (WE CAN SPECIFY IT LATER IN MYSTACK.TS)
+# CMD [ "hello.apigateway" ]
+```
+
+Lastly we can add to our `MyStack.ts` file the following construct:
+
+```typescript
+const api = new Api(stack, "api", {
+  routes: {
+    // ..
+    "GET /calculate/containerRuntime": {
+      function: {
+        runtime: "container",
+        handler: "packages/functions",
+        container: {
+          cmd: ["calculate"],
+        },
+      },
+    },
+  },
+  // ...
+});
+```
+
 ## LIMITATIONS
 
 This experimental approach comes with some limitations. Notably, it is not integrated into the SST Framework. There are known limitations related to testing and debugging functions. When using the `sst dev` command, the `lambda.zip` file will be uploaded to AWS, making it currently possible to observe invocations or console logs only via the official AWS Console.
+
+Using the SST support for Container Functions it will be possible to observe invocations also in the SST Console but it we will probably have worst performaces both for cold start and execution.
 
 ---
 
