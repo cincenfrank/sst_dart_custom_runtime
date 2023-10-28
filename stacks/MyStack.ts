@@ -27,6 +27,15 @@ export function API({ stack }: StackContext) {
           },
         },
       },
+      "GET /calculate/containerDartRuntime": {
+        function: {
+          runtime: "container",
+          handler: "packages/functions",
+          container: {
+            cmd: ["calculate"],
+          },
+        },
+      },
     },
   });
 
